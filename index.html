@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحدي اليوم الوطني 96 - الابتدائية التاسعة عشر</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-950: #022c22;
+      --green-900: #064e3b;
+      --green-800: #065f46;
+      --green-700: #047857;
+      --green-500: #10b981;
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --white: #fff;
+      --muted: #a7f3d0;
+      --danger: #f43f5e;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 10% 15%, rgba(16,185,129,.22), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(245,158,11,.16), transparent 25%),
+        linear-gradient(135deg, #011c16, var(--green-950) 50%, #064e3b);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '🇸🇦';
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: min(55vw, 520px);
+      opacity: .035;
+      pointer-events: none;
+      z-index: 0;
+    }
+    button, input { font: inherit; }
+    button { border: 0; }
+    .page { min-height: 100vh; position: relative; z-index: 1; display: flex; flex-direction: column; }
+    .header {
+      position: sticky; top: 0; z-index: 10; padding: 14px 20px;
+      background: rgba(2,44,34,.92); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(16,185,129,.35); box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    }
+    .header-inner, .main-inner { width: min(100%, 920px); margin: 0 auto; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .flag { font-size: 2rem; animation: bounce 2s infinite; }
+    .brand small { display: block; color: var(--gold-light); font-weight: 900; font-size: .78rem; }
+    .brand span:last-child { display: block; font-size: .72rem; font-weight: 700; }
+    .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(16,185,129,.6); background: rgba(6,78,59,.75); color: var(--muted); font-size: .74rem; font-weight: 700; }
+    .pill.gold { color: #fde68a; border-color: rgba(245,158,11,.65); background: rgba(245,158,11,.14); }
+    .clickable { cursor: pointer; transition: transform .2s, filter .2s, background .2s; }
+    .clickable:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 16px; }
+    .card {
+      width: min(100%, 700px); padding: clamp(24px, 5vw, 48px); text-align: center;
+      background: rgba(4,47,36,.9); border: 1px solid rgba(52,211,153,.38); border-radius: 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,.5); backdrop-filter: blur(18px); overflow: hidden;
+    }
+    .hidden { display: none !important; }
+    .logo { width: 92px; height: 92px; margin: 0 auto 16px; display: grid; place-items: center; border-radius: 28px; font-size: 3rem; background: linear-gradient(135deg, var(--green-700), var(--gold)); border: 2px solid var(--gold-light); box-shadow: 0 0 35px rgba(245,158,11,.45); transform: rotate(2deg); }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin-bottom: 10px; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.2; }
+    h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+    .gold-text { color: var(--gold-light); }
+    .lead { color: var(--muted); line-height: 1.9; margin-bottom: 24px; }
+    .form-group { max-width: 440px; margin: 0 auto 18px; text-align: right; }
+    label { display: block; color: var(--muted); font-size: .82rem; font-weight: 700; margin-bottom: 7px; }
+    input { width: 100%; padding: 13px 16px; border-radius: 13px; border: 1px solid var(--green-700); color: #fff; background: rgba(1,28,22,.8); text-align: center; outline: none; }
+    input:focus { border-color: var(--gold-light); box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+    .difficulty-label { color: var(--muted); font-size: .82rem; font-weight: 700; margin: 10px 0; }
+    .difficulty-grid { max-width: 440px; margin: 0 auto 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+    .difficulty { padding: 12px 7px; color: #fff; background: rgba(6,78,59,.62); border: 1px solid var(--green-700); border-radius: 12px; cursor: pointer; font-weight: 700; font-size: .8rem; }
+    .difficulty.selected { background: rgba(245,158,11,.3); border-color: var(--gold); box-shadow: 0 0 0 2px rgba(245,158,11,.35); }
+    .primary { padding: 14px 34px; color: #fff; background: linear-gradient(135deg, #d97706, var(--gold-light), #b45309); border-radius: 14px; box-shadow: 0 10px 25px rgba(245,158,11,.25); font-weight: 900; cursor: pointer; }
+    .quiz-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid rgba(16,185,129,.3); color: var(--muted); font-size: .85rem; font-weight: 700; }
+    .quiz-tag { padding: 6px 10px; background: rgba(1,28,22,.75); border: 1px solid rgba(16,185,129,.4); border-radius: 9px; }
+    .timer { color: var(--gold-light); }
+    .progress-wrap { height: 8px; margin: 18px 0 26px; overflow: hidden; border-radius: 999px; background: rgba(1,28,22,.8); border: 1px solid rgba(16,185,129,.3); }
+    #timer-bar { height: 100%; width: 100%; background: var(--gold); transition: width .08s linear; }
+    #timer-bar.danger { background: var(--danger); }
+    .question { min-height: 105px; display: grid; place-items: center; font-size: clamp(1.15rem, 3vw, 1.55rem); line-height: 1.8; }
+    .options { display: grid; gap: 11px; margin-top: 18px; }
+    .option { width: 100%; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #fff; text-align: right; background: rgba(1,28,22,.76); border: 1px solid rgba(16,185,129,.4); border-radius: 13px; cursor: pointer; font-weight: 700; transition: .2s; }
+    .option:hover:not(:disabled) { background: rgba(6,95,70,.9); border-color: var(--gold-light); transform: scale(1.01); }
+    .option:disabled { cursor: default; }
+    .option.correct { background: rgba(5,150,105,.8); border-color: #a7f3d0; box-shadow: 0 0 0 2px rgba(167,243,208,.3); }
+    .option.wrong { background: rgba(76,5,25,.9); border-color: var(--danger); box-shadow: 0 0 0 2px rgba(244,63,94,.3); }
+    .result-icon { width: 108px; height: 108px; margin: 0 auto 16px; display: grid; place-items: center; border-radius: 28px; font-size: 4rem; background: rgba(245,158,11,.15); border: 2px solid var(--gold); box-shadow: 0 0 35px rgba(245,158,11,.35); }
+    .result-box { max-width: 440px; margin: 20px auto; padding: 22px; border-radius: 17px; background: rgba(1,28,22,.78); border: 1px solid rgba(16,185,129,.35); }
+    .final-score { margin: 4px 0 12px; color: var(--gold-light); font-size: 3.2rem; font-weight: 900; }
+    .result-message { color: #d1fae5; line-height: 1.9; white-space: pre-line; }
+    .result-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin: 18px 0 12px; }
+    .result-stats div { padding: 9px 4px; background: rgba(6,78,59,.55); border: 1px solid rgba(16,185,129,.3); border-radius: 10px; }
+    .result-stats strong, .result-stats span { display: block; }
+    .result-stats strong { color: var(--gold-light); font-size: 1.2rem; }
+    .result-stats span { color: var(--muted); font-size: .66rem; }
+    .best-score { color: #fde68a; font-size: .82rem; font-weight: 700; margin: 8px 0; }
+    .footer { padding: 16px; text-align: center; color: var(--muted); border-top: 1px solid rgba(16,185,129,.2); font-size: .75rem; }
+    .footer strong { color: var(--gold-light); }
+    .alert { position: fixed; top: 92px; left: 50%; z-index: 20; transform: translateX(-50%); min-width: min(90vw, 360px); padding: 12px 18px; color: var(--green-950); background: var(--gold-light); border: 2px solid #fff; border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.4); font-weight: 900; text-align: center; animation: pop .25s ease-out; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes pop { from { opacity: 0; transform: translate(-50%, -12px) scale(.92); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+    .confetti { position: fixed; top: -20px; z-index: 19; width: 9px; height: 14px; pointer-events: none; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+    @media (max-width: 560px) { .header-inner { align-items: flex-start; } .header-actions { gap: 5px; } .pill { padding: 5px 8px; font-size: .65rem; } .brand small { font-size: .67rem; } .brand span:last-child { font-size: .6rem; } .difficulty-grid { gap: 5px; } .difficulty { font-size: .68rem; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand"><span class="flag">🇸🇦</span><div><small>الابتدائية التاسعة عشر</small><span>اليوم الوطني 96 - عزنا بطبعنا</span></div></div>
+        <div class="header-actions">
+          <span id="student-display" class="pill gold hidden">الطالبة: <span id="header-student-name"></span></span>
+          <button id="sound-toggle-btn" class="pill clickable" type="button">🔊 الصوت: مفعل</button>
+          <span id="streak-badge" class="pill hidden">🔥 متتالية: <span id="streak-count">0</span></span>
+          <span id="score-badge" class="pill gold hidden">النقاط: <span id="current-score">0</span></span>
+        </div>
+      </div>
+    </header>
+
+    <main><div class="main-inner"><section class="card">
+      <div id="screen-welcome">
+        <div class="logo">🇸🇦</div>
+        <h1>عزنا <span class="gold-text">بطبعنا</span></h1>
+        <p class="lead">اختبري معلوماتك واكتشفي ونافسي في <strong class="gold-text">الابتدائية التاسعة عشر</strong>.</p>
+        <div class="form-group"><label for="student-name-input">أدخلي اسم الطالبة الكريم:</label><input id="student-name-input" type="text" maxlength="50" placeholder="اكتبي اسمك هنا..." autocomplete="off"></div>
+        <p class="difficulty-label">اختاري مستوى التحدي:</p>
+        <div class="difficulty-grid">
+          <button class="difficulty" id="btn-easy" type="button" data-level="easy">سهل<br>(30 ثانية)</button>
+          <button class="difficulty selected" id="btn-medium" type="button" data-level="medium">متوسط<br>(20 ثانية)</button>
+          <button class="difficulty" id="btn-hard" type="button" data-level="hard">محترف<br>(12 ثانية)</button>
+        </div>
+        <button id="start-btn" class="primary clickable" type="button">ابدئي الرحلة 🚀</button>
+      </div>
+
+      <div id="screen-quiz" class="hidden">
+        <div class="quiz-top"><span id="question-counter" class="quiz-tag">السؤال 1 من 10</span><span id="multiplier-badge" class="quiz-tag hidden"></span><span id="timer" class="quiz-tag timer">الوقت: 20 ثانية</span></div>
+        <div class="progress-wrap"><div id="timer-bar"></div></div>
+        <div class="question"><h3 id="question-text"></h3></div>
+        <div id="options-container" class="options"></div>
+      </div>
+
+      <div id="screen-result" class="hidden">
+        <div class="result-icon">🏆</div>
+        <h2>يا بطلة الوطن <span id="result-student-name" class="gold-text"></span></h2>
+        <div class="result-box"><p>نتيجتك النهائية:</p><p class="final-score"><span id="final-score">0</span> <small style="font-size:1rem;color:#a7f3d0">نقطة</small></p><p id="total-time-display"></p><p id="badge-achievement" class="gold-text">وسام عزنا بطبعنا 🏅🇸🇦</p><div class="result-stats">
+            <div><strong id="correct-count">0</strong><span>صحيحة</span></div>
+            <div><strong id="wrong-count">0</strong><span>خاطئة</span></div>
+            <div><strong id="timeout-count">0</strong><span>انتهى وقتها</span></div>
+            <div><strong id="percentage">0%</strong><span>النسبة</span></div>
+          </div>
+          <p id="best-score" class="best-score"></p>
+          <p id="result-message" class="result-message"></p></div>
+        <button id="share-btn" class="primary clickable" type="button">تسجيل إنجاز الطالبة 📝</button>
+        <button id="restart-btn" class="pill clickable" type="button" style="margin-top:10px">العودة للبداية</button>
+      </div>
+    </section></div></main>
+    <footer class="footer">الابتدائية التاسعة عشر - اليوم الوطني السعودي الـ 96 🇸🇦 <strong> | إعداد: فاطمة المالكي</strong></footer>
+  </div>
+
+  <script>
+    'use strict';
+    let soundEnabled = true, audioCtx = null, studentName = '', difficulty = 'medium', timeLimit = 20;
+    let questions = [], currentQuestionIndex = 0, score = 0, streak = 0, timeLeft = 20, timerInterval = null, quizStartTime = 0, totalElapsedSeconds = 0, correctAnswers = 0, wrongAnswers = 0, timeoutAnswers = 0;
+
+    const allQuestions = [
+      { question: 'ما هو شعار اليوم الوطني السعودي الـ 96؟', options: ['نحلم ونحقق', 'عزنا بطبعنا', 'هي لنا دار', 'سيف ونخلة المجد'], correct: 1 },
+      { question: 'ما المعنى العميق الذي يجسده شعار عزنا بطبعنا؟', options: ['الشهامة، الكرم، الأصالة، وعراقة الأخلاق السعودية المتوارثة', 'التطوير التجاري البحري السريع', 'التبادل الثقافي السياحي فقط', 'التصميم العمراني الحديث للآفاق'], correct: 0 },
+      { question: 'في أي عام ميلادي تم إعلان توحيد وتأسيس المملكة العربية السعودية رسمياً؟', options: ['1902 ميلادية', '1926 ميلادية', '1932 ميلادية', '1950 ميلادية'], correct: 2 },
+      { question: 'من هو الملك المؤسس الذي استرد الرياض ووحد أرجاء البلاد؟', options: ['الملك عبد العزيز بن عبد الرحمن آل سعود', 'الملك فهد بن عبد العزيز آل سعود', 'الملك عبد الله بن عبد العزيز آل سعود', 'الملك سعود بن عبد العزيز آل سعود'], correct: 0 },
+      { question: 'ما الذي يزين علم المملكة العربية السعودية بشموخ على خلفيته الخضراء؟', options: ['سيفان متقاطعان ونخلة', 'الشهادتان وتحتهما سيف مسلول', 'صقر ذهبي يحمل سيفاً', 'نخلة ذهبية فقط'], correct: 1 },
+      { question: 'ما هو المشروب التقليدي الأصيل الذي يُعد رمزاً للكرم والضيافة السعودية العريقة؟', options: ['الشاي الأخضر بالنعناع', 'القهوة السعودية بالهيل والزعفران', 'عصير الليمون بالنعناع', 'شراب الزنجبيل الدافئ'], correct: 1 },
+      { question: 'ما هي العرضة السعودية المسجلة في منظمة اليونسكو والتي تعبر عن شموخ الوطن وعزته؟', options: ['رقصة الفلكلور البحري', 'العرضة السعودية الوطنية', 'رقصة الماص والخطوة', 'السامري التراثي'], correct: 1 },
+      { question: 'ما هي العاصمة السياسية والإدارية للمملكة العربية السعودية؟', options: ['مدينة جدة', 'مدينة الرياض', 'مكة المكرمة', 'المدينة المنورة'], correct: 1 },
+      { question: 'أي من هذه المواقع التاريخية في المملكة مسجل في قائمة التراث العالمي لليونسكو ويشتهر بمدائنه الصخرية؟', options: ['محافظة الطائف', 'منطقة أجياد', 'موقع الحجر في محافظة العلا', 'الدرعية التاريخية فقط'], correct: 2 },
+      { question: 'ما هو الرمز الوطني البارز الذي يمثل الشموخ والقوة والحرية في البيئة السعودية؟', options: ['النخلة الباسقة والصقر العربي الأصيل', 'الجمل العربي الصحراوي', 'الفرس العربي الأصيل فقط', 'شجر الأرز والعنب'], correct: 0 }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const encouragements = ['أحسنتِ يا بطلة!', 'إجابة رائعة، واصلي التألق!', 'ممتاز! أنتِ تقتربين من القمة!', 'رائع جدًا، عزيمتك تلمع!', 'فخر الوطن يبدأ من أمثالك!'];
+    function getBadge(percent) { return percent >= 90 ? 'وسام البطلة الذهبية 🥇' : percent >= 70 ? 'وسام المعرفة الوطنية 🏅' : percent >= 50 ? 'وسام النجمة المتألقة ⭐' : 'وسام المشاركة المميزة 🌟'; }
+    function initAudio() { try { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch (_) {} }
+    function playTone(frequency, duration, type = 'sine', volume = .12) { if (!soundEnabled) return; try { initAudio(); if (!audioCtx) return; const osc = audioCtx.createOscillator(), gain = audioCtx.createGain(); osc.type = type; osc.frequency.value = frequency; gain.gain.setValueAtTime(volume, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + duration); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration); } catch (_) {} }
+    function clickSound() { playTone(600, .08, 'triangle', .1); }
+    function correctSound() { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => setTimeout(() => playTone(f, .22), i * 85)); }
+    function wrongSound() { playTone(180, .3, 'sawtooth', .15); }
+    function fanfare() { [440, 554.37, 659.25, 880].forEach((f, i) => setTimeout(() => playTone(f, .3, 'triangle', .2), i * 120)); }
+    function showAlert(message) { const old = document.querySelector('.alert'); if (old) old.remove(); const el = document.createElement('div'); el.className = 'alert'; el.textContent = message; document.body.appendChild(el); setTimeout(() => el.remove(), 1800); }
+    function triggerConfettiBurst() { const colors = ['#f59e0b','#10b981','#fbbf24','#047857','#ffffff']; for (let i = 0; i < 25; i++) { const el = document.createElement('div'); el.className = 'confetti'; el.style.left = `${Math.random() * 100}vw`; el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; el.style.animationDuration = `${1.5 + Math.random() * 2}s`; el.style.transform = `rotate(${Math.random() * 180}deg)`; document.body.appendChild(el); setTimeout(() => el.remove(), 3800); } }
+    function toggleSound() { soundEnabled = !soundEnabled; $('sound-toggle-btn').textContent = soundEnabled ? '🔊 الصوت: مفعل' : '🔇 الصوت: معطل'; if (soundEnabled) clickSound(); }
+    function setDifficulty(level) { clickSound(); difficulty = level; timeLimit = level === 'easy' ? 30 : level === 'hard' ? 12 : 20; document.querySelectorAll('.difficulty').forEach(b => b.classList.toggle('selected', b.dataset.level === level)); }
+    function startGame() { clickSound(); initAudio(); studentName = $('student-name-input').value.trim(); if (!studentName) { showAlert('⚠️ الرجاء إدخال اسم الطالبة أولاً!'); $('student-name-input').focus(); return; } $('header-student-name').textContent = studentName; $('result-student-name').textContent = `(${studentName})`; $('student-display').classList.remove('hidden'); questions = [...allQuestions].sort(() => Math.random() - .5); currentQuestionIndex = 0; score = 0; streak = 0; correctAnswers = 0; wrongAnswers = 0; timeoutAnswers = 0; $('current-score').textContent = '0'; $('streak-count').textContent = '0'; quizStartTime = Date.now(); $('screen-welcome').classList.add('hidden'); $('screen-result').classList.add('hidden'); $('screen-quiz').classList.remove('hidden'); $('score-badge').classList.remove('hidden'); $('streak-badge').classList.remove('hidden'); loadQuestion(); }
+    function loadQuestion() { if (timerInterval) clearInterval(timerInterval); timeLeft = timeLimit; $('timer').textContent = `الوقت: ${Math.ceil(timeLeft)} ثانية`; $('timer-bar').style.width = '100%'; $('timer-bar').classList.remove('danger'); $('multiplier-badge').classList.toggle('hidden', streak < 2); if (streak >= 2) $('multiplier-badge').textContent = `مضاعف x${Math.min(streak, 4)}`; const q = questions[currentQuestionIndex]; $('question-counter').textContent = `السؤال ${currentQuestionIndex + 1} من ${questions.length}`; $('question-text').textContent = q.question; $('options-container').innerHTML = ''; q.options.forEach((text, index) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'option'; b.innerHTML = `<span>${text}</span><b>${String.fromCharCode(1571 + index)}</b>`; b.addEventListener('click', () => selectAnswer(index, b)); $('options-container').appendChild(b); }); startTimer(); }
+    function startTimer() { const started = Date.now(), duration = timeLimit * 1000; timerInterval = setInterval(() => { const remaining = Math.max(0, duration - (Date.now() - started)); timeLeft = remaining / 1000; $('timer').textContent = `الوقت: ${Math.ceil(timeLeft)} ثانية`; $('timer-bar').style.width = `${remaining / duration * 100}%`; $('timer-bar').classList.toggle('danger', remaining / duration < .3); if (remaining <= 0) { clearInterval(timerInterval); timerInterval = null; handleTimeout(); } }, 50); }
+    function handleTimeout() { wrongSound(); timeoutAnswers++; streak = 0; $('streak-count').textContent = '0'; const buttons = $('options-container').querySelectorAll('.option'), correct = questions[currentQuestionIndex].correct; buttons.forEach(b => b.disabled = true); buttons[correct].classList.add('correct'); showAlert('⏰ انتهى الوقت!'); setTimeout(nextQuestion, 1600); }
+    function selectAnswer(selected, chosen) { clickSound(); if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } const correct = questions[currentQuestionIndex].correct, buttons = $('options-container').querySelectorAll('.option'); buttons.forEach(b => { b.disabled = true; }); if (selected === correct) { correctSound(); correctAnswers++; chosen.classList.add('correct'); streak++; $('streak-count').textContent = streak; if (streak >= 3) setTimeout(fanfare, 250); const base = difficulty === 'hard' ? 20 : difficulty === 'medium' ? 15 : 10; const earned = (base + Math.floor(timeLeft * 1.5)) * Math.min(streak, 4); score += earned; $('current-score').textContent = score; triggerConfettiBurst(); showAlert(`✨ ${encouragements[Math.floor(Math.random() * encouragements.length)]} (+${earned} نقطة)`); } else { wrongSound(); wrongAnswers++; streak = 0; $('streak-count').textContent = '0'; chosen.classList.add('wrong'); buttons[correct].classList.add('correct'); showAlert('❌ عذراً، الإجابة غير صحيحة!'); } setTimeout(nextQuestion, 1800); }
+    function nextQuestion() { currentQuestionIndex++; if (currentQuestionIndex < questions.length) loadQuestion(); else showResult(); }
+    function showResult() { if (timerInterval) clearInterval(timerInterval); $('screen-quiz').classList.add('hidden'); $('score-badge').classList.add('hidden'); $('streak-badge').classList.add('hidden'); $('screen-result').classList.remove('hidden'); $('final-score').textContent = score; const percent = Math.round((correctAnswers / questions.length) * 100); $('correct-count').textContent = correctAnswers; $('wrong-count').textContent = wrongAnswers; $('timeout-count').textContent = timeoutAnswers; $('percentage').textContent = percent + '%'; $('badge-achievement').textContent = getBadge(percent); const previousBest = Number(localStorage.getItem('nationalQuizBestScore') || 0); if (score > previousBest) { localStorage.setItem('nationalQuizBestScore', String(score)); $('best-score').textContent = '🎉 أفضل نتيجة جديدة لكِ!'; } else { $('best-score').textContent = '🏆 أفضل نتيجة حتى الآن: ' + previousBest + ' نقطة'; } totalElapsedSeconds = Math.round((Date.now() - quizStartTime) / 1000); const minutes = Math.floor(totalElapsedSeconds / 60), seconds = totalElapsedSeconds % 60; const timeString = minutes ? `${minutes} دقيقة و ${seconds} ثانية` : `${seconds} ثانية`; $('total-time-display').textContent = `⏱️ استغرق إنجازك: ${timeString}`; $('result-message').textContent = 'يا بطلة الوطن\nشاركتِ في اللعبة بكل حماس، وأظهرتِ حبك الجميل لبلادنا الغالية.\nأنتِ جزء من مستقبل السعودية وروحك الوطنية تجعلنا فخورين بك دائمًا'; fanfare(); for (let i = 0; i < 5; i++) setTimeout(triggerConfettiBurst, i * 350); }
+    function shareScore() {
+      clickSound();
+      const minutes = Math.floor(totalElapsedSeconds / 60);
+      const seconds = totalElapsedSeconds % 60;
+      const timeString = minutes ? `${minutes} دقيقة و ${seconds} ثانية` : `${seconds} ثانية`;
+      const formUrl = new URL('https://docs.google.com/forms/d/e/1FAIpQLScT2nvML39Dt6dvbuEdCrN8lVGP-8o1PAoB9mdFa1APqPzT5w/viewform');
+      formUrl.searchParams.set('usp', 'pp_url');
+      formUrl.searchParams.set('entry.1370929469', timeString);
+      formUrl.searchParams.set('entry.1287719500', studentName);
+      formUrl.searchParams.set('entry.1873619332', String(score));
+      window.open(formUrl.toString(), '_blank', 'noopener,noreferrer');
+    }
+    function restart() { if (timerInterval) clearInterval(timerInterval); $('screen-result').classList.add('hidden'); $('screen-quiz').classList.add('hidden'); $('screen-welcome').classList.remove('hidden'); $('student-display').classList.add('hidden'); $('score-badge').classList.add('hidden'); $('streak-badge').classList.add('hidden'); }
+    $('sound-toggle-btn').addEventListener('click', toggleSound); $('start-btn').addEventListener('click', startGame); $('share-btn').addEventListener('click', shareScore); $('restart-btn').addEventListener('click', restart); document.querySelectorAll('.difficulty').forEach(b => b.addEventListener('click', () => setDifficulty(b.dataset.level))); $('student-name-input').addEventListener('keydown', e => { if (e.key === 'Enter') startGame(); });
+  </script>
+</body>
+</html>
