@@ -107,6 +107,10 @@
     .result-stats strong { color: var(--gold-light); font-size: 1.2rem; }
     .result-stats span { color: var(--muted); font-size: .66rem; }
     .best-score { color: #fde68a; font-size: .82rem; font-weight: 700; margin: 8px 0; }
+    .embedded-form-wrap { margin-top:18px; padding:12px; border-radius:18px; background:rgba(1,28,22,.72); border:1px solid rgba(16,185,129,.35); }
+    .embedded-form-wrap p { color:var(--muted); line-height:1.8; }
+    .embedded-form { width:100%; min-height:650px; border:0; border-radius:14px; background:white; }
+    .form-finished { margin-top:12px; width:100%; }
     .footer { padding: 16px; text-align: center; color: var(--muted); border-top: 1px solid rgba(16,185,129,.2); font-size: .75rem; }
     .footer strong { color: var(--gold-light); }
     .alert { position: fixed; top: 92px; left: 50%; z-index: 20; transform: translateX(-50%); min-width: min(90vw, 360px); padding: 12px 18px; color: var(--green-950); background: var(--gold-light); border: 2px solid #fff; border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.4); font-weight: 900; text-align: center; animation: pop .25s ease-out; }
@@ -164,7 +168,12 @@
           </div>
           <p id="best-score" class="best-score"></p>
           <p id="result-message" class="result-message"></p></div>
-        <button id="share-btn" class="primary clickable" type="button">تسجيل إنجاز الطالبة 📝</button>
+        <button id="share-btn" class="primary clickable" type="button">تسجيل الإنجاز وإكمال الشهادة 📝</button>
+        <div id="embedded-form-wrap" class="embedded-form-wrap hidden">
+          <p><strong>خطوة الحصر:</strong> تأكدي من بياناتك ثم اضغطي «إرسال» داخل النموذج. بعد ظهور رسالة «تم استلام إنجازك» اضغطي الزر أسفل النموذج.</p>
+          <iframe id="embedded-form" class="embedded-form" title="نموذج تسجيل إنجاز الطالبة"></iframe>
+          <button id="form-finished-btn" class="primary clickable form-finished" type="button">تم الإرسال — إظهار شهادتي 🎓</button>
+        </div>
         <button id="certificate-btn" class="primary clickable hidden" type="button" style="margin-top:10px">عرض الشهادة 🎓</button>
         <button id="restart-btn" class="pill clickable" type="button" style="margin-top:10px">العودة للبداية</button>
       </div>
@@ -220,16 +229,18 @@
       formUrl.searchParams.set('entry.1370929469', timeString);
       formUrl.searchParams.set('entry.1287719500', studentName);
       formUrl.searchParams.set('entry.1873619332', String(score));
-      window.open(formUrl.toString(), '_blank', 'noopener,noreferrer');
-      $('share-btn').textContent = 'تم فتح النموذج — بعد الإرسال اضغطي هنا ✓';
-      $('share-btn').dataset.formOpened = '1';
+      $('embedded-form').src = formUrl.toString() + '&embedded=true';
+      $('embedded-form-wrap').classList.remove('hidden');
+      $('share-btn').classList.add('hidden');
+      setTimeout(() => $('embedded-form-wrap').scrollIntoView({behavior:'smooth', block:'start'}), 150);
     }
 
     function confirmFormSubmitted() {
       clickSound();
-      $('share-btn').classList.add('hidden');
+      $('embedded-form-wrap').classList.add('hidden');
       $('certificate-btn').classList.remove('hidden');
-      showAlert('🎉 تم التأكيد، شهادتك جاهزة!');
+      showAlert('🎉 شهادتك جاهزة!');
+      setTimeout(showCertificate, 250);
     }
 
     function showCertificate() {
@@ -241,8 +252,8 @@
       cert.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>شهادة ${safeName}</title><style>body{margin:0;font-family:Cairo,Tahoma,sans-serif;background:#f7f3e8;color:#064e3b;display:grid;place-items:center;min-height:100vh}.cert{width:min(900px,92vw);box-sizing:border-box;background:#fffdf7;border:12px double #0b6b4b;padding:55px 35px;text-align:center;box-shadow:0 20px 50px #0002}.flag{font-size:60px}.school{font-weight:800}.title{font-size:42px;color:#b7791f;margin:15px}.name{font-size:36px;font-weight:900;border-bottom:2px solid #d4af37;display:inline-block;padding:5px 35px}.text{font-size:20px;line-height:2}.score{font-weight:800;color:#8a5b13}.sign{margin-top:40px;display:flex;justify-content:space-around;font-weight:700}.print{margin-top:30px;padding:12px 24px;border:0;border-radius:10px;background:#064e3b;color:white;font:inherit;cursor:pointer}@media print{.print{display:none}body{background:white}.cert{box-shadow:none;width:100%;border-width:8px}}</style></head><body><div class="cert"><div class="flag">🇸🇦</div><div class="school">الابتدائية التاسعة عشر</div><div class="title">شهادة مشاركة وتميّز</div><p>بمناسبة اليوم الوطني السعودي الـ 96 — عزنا بطبعنا</p><p class="text">تُمنح هذه الشهادة للطالبة</p><div class="name">${safeName}</div><p class="text">تقديرًا لمشاركتها المميزة في تحدي اليوم الوطني<br><span class="score">النتيجة: ${score} نقطة — ${percent}%</span></p><div class="sign"><span>إعداد: فاطمة المالكي</span><span>مديرة المدرسة<br>مريم القيسي</span></div><button class="print" onclick="window.print()">حفظ / طباعة الشهادة</button></div></body></html>`);
       cert.document.close();
     }
-    function restart() { if (timerInterval) clearInterval(timerInterval); $('share-btn').classList.remove('hidden'); $('certificate-btn').classList.add('hidden'); $('share-btn').textContent = 'تسجيل إنجاز الطالبة 📝'; delete $('share-btn').dataset.formOpened; $('screen-result').classList.add('hidden'); $('screen-quiz').classList.add('hidden'); $('screen-welcome').classList.remove('hidden'); $('student-display').classList.add('hidden'); $('score-badge').classList.add('hidden'); $('streak-badge').classList.add('hidden'); }
-    $('sound-toggle-btn').addEventListener('click', toggleSound); $('start-btn').addEventListener('click', startGame); $('share-btn').addEventListener('click', () => { if ($('share-btn').dataset.formOpened === '1') confirmFormSubmitted(); else shareScore(); }); $('certificate-btn').addEventListener('click', showCertificate); $('restart-btn').addEventListener('click', restart); document.querySelectorAll('.difficulty').forEach(b => b.addEventListener('click', () => setDifficulty(b.dataset.level))); $('student-name-input').addEventListener('keydown', e => { if (e.key === 'Enter') startGame(); });
+    function restart() { if (timerInterval) clearInterval(timerInterval); $('share-btn').classList.remove('hidden'); $('embedded-form-wrap').classList.add('hidden'); $('embedded-form').src = ''; $('certificate-btn').classList.add('hidden'); $('share-btn').textContent = 'تسجيل الإنجاز وإكمال الشهادة 📝'; $('screen-result').classList.add('hidden'); $('screen-quiz').classList.add('hidden'); $('screen-welcome').classList.remove('hidden'); $('student-display').classList.add('hidden'); $('score-badge').classList.add('hidden'); $('streak-badge').classList.add('hidden'); }
+    $('sound-toggle-btn').addEventListener('click', toggleSound); $('start-btn').addEventListener('click', startGame); $('share-btn').addEventListener('click', shareScore); $('form-finished-btn').addEventListener('click', confirmFormSubmitted); $('certificate-btn').addEventListener('click', showCertificate); $('restart-btn').addEventListener('click', restart); document.querySelectorAll('.difficulty').forEach(b => b.addEventListener('click', () => setDifficulty(b.dataset.level))); $('student-name-input').addEventListener('keydown', e => { if (e.key === 'Enter') startGame(); });
   </script>
 </body>
 </html>
